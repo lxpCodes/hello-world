@@ -32,6 +32,7 @@ import javax.lang.model.element.Element;
 import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
+import javax.naming.Context;
 import javax.tools.JavaCompiler.CompilationTask;
 import javax.tools.JavaFileObject;
 

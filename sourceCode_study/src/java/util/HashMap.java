@@ -624,21 +624,27 @@ public class HashMap<K,V> extends AbstractMap<K,V>
     final V putVal(int hash, K key, V value, boolean onlyIfAbsent,
                    boolean evict) {
         Node<K,V>[] tab; Node<K,V> p; int n, i;
+        //如果不存在任何节点,初始化长度
         if ((tab = table) == null || (n = tab.length) == 0)
             n = (tab = resize()).length;
+        //找到具体的下标,不存在就新初始化一个Node
         if ((p = tab[i = (n - 1) & hash]) == null)
             tab[i] = newNode(hash, key, value, null);
-        else {
+        else {//当前下标有元素
             Node<K,V> e; K k;
+            //判断是否已存在相同的key
             if (p.hash == hash &&
                 ((k = p.key) == key || (key != null && key.equals(k))))
                 e = p;
+            //如果是红黑树的节点,使用红黑树的添加方法
             else if (p instanceof TreeNode)
                 e = ((TreeNode<K,V>)p).putTreeVal(this, tab, hash, key, value);
             else {
+                //在当前链表最后面添加元素(java7是最前面)
                 for (int binCount = 0; ; ++binCount) {
                     if ((e = p.next) == null) {
                         p.next = newNode(hash, key, value, null);
+                        //当链表长度到达8时,即准备加入第8个元素时,如果总容量不小于64,会变为红黑树,
                         if (binCount >= TREEIFY_THRESHOLD - 1) // -1 for 1st
                             treeifyBin(tab, hash);
                         break;
@@ -754,10 +760,12 @@ public class HashMap<K,V> extends AbstractMap<K,V>
     final void treeifyBin(Node<K,V>[] tab, int hash) {
         int n, index; Node<K,V> e;
         if (tab == null || (n = tab.length) < MIN_TREEIFY_CAPACITY)
+            //小于64,只扩容不转换
             resize();
         else if ((e = tab[index = (n - 1) & hash]) != null) {
             TreeNode<K,V> hd = null, tl = null;
             do {
+                //转为红黑树节点
                 TreeNode<K,V> p = replacementTreeNode(e, null);
                 if (tl == null)
                     hd = p;
