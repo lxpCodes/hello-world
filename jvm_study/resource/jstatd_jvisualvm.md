@@ -1,6 +1,7 @@
 **使用Java自带jvisualvm远程监控JVM运行情况**
 
->####1.使用jstatd
+>####**方式一：使用jstatd**
+>
 >1.cd ${JAVA_HOME}/bin
 >
 >2.sudo vi jstatd.all.policy
@@ -28,7 +29,7 @@
 >
 >
 >
->>####2.使用jmx
+>>####**方式二：使用jmx**
 >1.远程服务器准备
 >           
 >      cd ${JAVA_HOME}/
