@@ -1,6 +1,6 @@
 **使用Java自带jvisualvm远程监控JVM运行情况**
 
->####1.远程服务器需要做的准备
+>####1.使用jstatd
 >1.cd ${JAVA_HOME}/bin
 >
 >2.sudo vi jstatd.all.policy
@@ -25,3 +25,30 @@
 >     sudo iptables -I INPUT -p tcp --dport 对应端口 -j ACCEPT
 >
 >6.此时应该可以进行远程监控了     
+>
+>
+>
+>>####2.使用jmx
+>1.远程服务器准备
+>           
+>      cd ${JAVA_HOME}/
+>      cd jre/
+>      cd lib/
+>      cd management/
+>      cp jmxremote.password.template jmxremote.password
+>      sudo vi jmxremote.password
+>      文件中将monitorRole  QED和 controlRole   R&D前的注释去掉，然后保存 
+>
+>2.更改java参数
+>    
+>     cd /etc/supervisord.d/  
+>     在java启动项里加上
+>     -Djava.rmi.server.hostname=【远程服务器ip】 -Dcom.sun.management.jmxremote.port=【指定端口】 -Dcom.sun.management.jmxremote.ssl=false -Dcom.sun.management.jmxremote.authenticate=false
+>
+>3.重启supervisor
+>   
+>     sudo supervisor reload
+
+
+
+        
