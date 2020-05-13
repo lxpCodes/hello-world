@@ -855,7 +855,16 @@ OOM产生的原因多种多样，有些程序未必产生OOM，不断FGC(CPU飙�
 
  19. 问：常见的OOM问题有哪些？
      栈 堆 MethodArea 直接内存
-
+     
+ 20. 三色标记算法存在的问题：黑灰白三种状态的转换
+     
+     CMS解决方案： incremental Update，及时把A变成灰色；但并发标记的时候会产生漏标；
+     
+     G1方案：SATB Snapshot At the Begining，起始的时候做个快照，扫描对象是否被引用；
+     
+     ZGC and Shenandoah的解决方案：colored pointers 颜色指针；ZGC能管理4T的内存，4T=2的42次方；
+     
+     
 
 
 ### 参考资料
