@@ -12,7 +12,7 @@ public class CountDownLatchTest {
 
     public static void main(String[] args) throws InterruptedException {
         CountDownLatch countDownLatch = new CountDownLatch(100);
-        for (int i = 0; i < 120; i++) {
+        for (int i = 0; i < 100; i++) {
             countDownLatch.countDown();
         }
 

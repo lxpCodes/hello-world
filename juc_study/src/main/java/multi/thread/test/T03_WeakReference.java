@@ -18,7 +18,7 @@ public class T03_WeakReference {
         Thread thread = Thread.currentThread();
         System.out.println(thread.hashCode());
         tl.set(new M());
-        tl.get()
+        tl.get();
         tl.remove();
 
     }
