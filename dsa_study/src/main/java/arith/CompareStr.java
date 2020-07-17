@@ -34,7 +34,6 @@ public class CompareStr {
         Arrays.sort(chars1);
         Arrays.sort(chars2);
         return Arrays.equals(chars1,chars2);
-
     }
 
     private static boolean compareStr2(String str1, String str2) {
