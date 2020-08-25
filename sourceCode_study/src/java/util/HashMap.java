@@ -630,7 +630,8 @@ public class HashMap<K,V> extends AbstractMap<K,V>
         //找到具体的下标,不存在就新初始化一个Node
         if ((p = tab[i = (n - 1) & hash]) == null)
             tab[i] = newNode(hash, key, value, null);
-        else {//当前下标有元素
+        else {
+            //当前下标有元素
             Node<K,V> e; K k;
             //判断是否已存在相同的key
             if (p.hash == hash &&
@@ -649,23 +650,31 @@ public class HashMap<K,V> extends AbstractMap<K,V>
                             treeifyBin(tab, hash);
                         break;
                     }
+                    // 判断链表中节点的key值与插入的元素的key值是否相等
                     if (e.hash == hash &&
                         ((k = e.key) == key || (key != null && key.equals(k))))
+                        // 相等跳出循环
                         break;
+                    // 遍历bucket中的链表,与前面的e = p.next组合,遍历链表
                     p = e;
                 }
             }
+            // key已存在时,返回新值
             if (e != null) { // existing mapping for key
                 V oldValue = e.value;
                 if (!onlyIfAbsent || oldValue == null)
                     e.value = value;
+                // 访问后回调
                 afterNodeAccess(e);
                 return oldValue;
             }
         }
+        // 结构修改标志
         ++modCount;
+        // 超过最大容量就扩容
         if (++size > threshold)
             resize();
+        // 插入后回调
         afterNodeInsertion(evict);
         return null;
     }
@@ -676,7 +685,8 @@ public class HashMap<K,V> extends AbstractMap<K,V>
      * Otherwise, because we are using power-of-two expansion, the
      * elements from each bin must either stay at same index, or move
      * with a power of two offset in the new table.
-     *
+     * 若为空，按字段阈值中持有的初始容量目标分配。
+     * 否则，由于我们使用的是2的幂展开，每个bin中的元素要么必须保持在相同的索引中，要么在新表中移动2的幂偏移量。
      * @return the table
      */
     final Node<K,V>[] resize() {
@@ -691,9 +701,10 @@ public class HashMap<K,V> extends AbstractMap<K,V>
             }
             else if ((newCap = oldCap << 1) < MAXIMUM_CAPACITY &&
                      oldCap >= DEFAULT_INITIAL_CAPACITY)
+                // 新数组长度扩容后小于最大容量且旧数组大于默认值16 双倍扩容阈值threshold
                 newThr = oldThr << 1; // double threshold
         }
-        else if (oldThr > 0) // initial capacity was placed in threshold
+        else if (oldThr > 0) // initial capacity was placed in threshold 旧容量为0,但threshold大于0,代表有参构造有初始值
             newCap = oldThr;
         else {               // zero initial threshold signifies using defaults
             newCap = DEFAULT_INITIAL_CAPACITY;
@@ -708,16 +719,21 @@ public class HashMap<K,V> extends AbstractMap<K,V>
         @SuppressWarnings({"rawtypes","unchecked"})
             Node<K,V>[] newTab = (Node<K,V>[])new Node[newCap];
         table = newTab;
+        // 原先数组未初始化,resize到此结束,否则进入扩容元素重排逻辑,使其均匀分散
         if (oldTab != null) {
             for (int j = 0; j < oldCap; ++j) {
                 Node<K,V> e;
                 if ((e = oldTab[j]) != null) {
+                    // 旧数组元素赋给临时元素,解除旧数组引用防止GC无效
                     oldTab[j] = null;
+                    // 代表就一个元素,不存在链表或红黑树,加入新数组即可
                     if (e.next == null)
                         newTab[e.hash & (newCap - 1)] = e;
+                    // 是树处理树中的重排
                     else if (e instanceof TreeNode)
                         ((TreeNode<K,V>)e).split(this, newTab, j, oldCap);
                     else { // preserve order
+                        // e为链表的头且e.next != null处理链表中元素重排
                         Node<K,V> loHead = null, loTail = null;
                         Node<K,V> hiHead = null, hiTail = null;
                         Node<K,V> next;
@@ -742,6 +758,7 @@ public class HashMap<K,V> extends AbstractMap<K,V>
                             loTail.next = null;
                             newTab[j] = loHead;
                         }
+                        // 将tail指向null,并把链表头放入新数组的相应下标,形成新映射
                         if (hiTail != null) {
                             hiTail.next = null;
                             newTab[j + oldCap] = hiHead;
