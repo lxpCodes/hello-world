@@ -129,6 +129,7 @@ public class ReentrantLock implements Lock, java.io.Serializable {
         final boolean nonfairTryAcquire(int acquires) {
             final Thread current = Thread.currentThread();
             int c = getState();
+            // 代表没人上锁,就自己上锁,并设置独占模式
             if (c == 0) {
                 if (compareAndSetState(0, acquires)) {
                     setExclusiveOwnerThread(current);
@@ -136,6 +137,7 @@ public class ReentrantLock implements Lock, java.io.Serializable {
                 }
             }
             else if (current == getExclusiveOwnerThread()) {
+                // 如果当前线程已经占有锁，加1代表重入
                 int nextc = c + acquires;
                 if (nextc < 0) // overflow
                     throw new Error("Maximum lock count exceeded");
