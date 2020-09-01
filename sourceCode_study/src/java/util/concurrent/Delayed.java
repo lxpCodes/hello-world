@@ -51,7 +51,7 @@ public interface Delayed extends Comparable<Delayed> {
     /**
      * Returns the remaining delay associated with this object, in the
      * given time unit.
-     *
+     * 在给定的时间单位内返回与此对象关联的剩余延迟
      * @param unit the time unit
      * @return the remaining delay; zero or negative values indicate
      * that the delay has already elapsed
