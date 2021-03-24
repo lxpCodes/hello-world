@@ -1,14 +1,14 @@
-package arith;
+package lagou;
 
 import java.util.Stack;
 
 /**
- * @ClassName ReverseStr
+ * @ClassName Case09_ReverseStr
  * @Description 反转字符串中的单词
  * @Author liangxp
  * @Date 2020/7/14 11:35
  **/
-public class ReverseStr {
+public class Case09_ReverseStr {
     public static void main(String[] args) {
         String words = "This is a  good example";
         System.out.println(reverseWords(words));

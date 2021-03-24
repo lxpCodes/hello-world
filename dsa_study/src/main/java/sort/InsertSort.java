@@ -1,5 +1,7 @@
 package sort;
 
+import java.util.Arrays;
+
 /**
  * @ClassName InsertSort
  * @Description 插入排序
@@ -14,6 +16,28 @@ package sort;
 public class InsertSort {
     public static void main(String[] args) {
         int arr [] = {32,43,23,13,5,26,78,49,100};
+        insertSort1(arr);
+
+//        insertSort2(arr);
+    }
+
+    public static void insertSort2(int[] arr){
+        int j;
+        //外层循环控制右侧未被排序的数 假设"第一个数"是"已经"排好序的,因此 未排序的数据从第二个数开始取
+        for (int i = 1; i < arr.length; i++) {
+            int norSort = arr[i];
+            //内层循环控制左侧已被排序的数,从最大的已排序的数开始比较
+            //如果未排序的数小于已排序的数arr[j],则将arr[j]像右移动一位
+            for (j = i - 1; j >= 0 && norSort < arr[j]; j--) {
+                arr[j + 1] = arr[j];
+            }
+            //如果未排序的数大于已排序的数arr[j],则将arr[j+1]赋值给norSort,这就是为排序的数需要插入的已排序数据中的位置
+            arr[j + 1] = norSort;
+        }
+        System.out.println(Arrays.toString(arr));
+    }
+
+    public static void insertSort1(int[] arr){
         /**
          * 直接插入排序
          * 首先设定插入次数，即循环次数，for(int i=1;i<length;i++)，1个数的那次不用插入。

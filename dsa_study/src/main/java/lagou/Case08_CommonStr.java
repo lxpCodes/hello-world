@@ -1,12 +1,12 @@
-package arith;
+package lagou;
 
 /**
- * @ClassName FindCommonStr
+ * @ClassName Case08_CommonStr
  * @Description 查找最大公共子串
  * @Author liangxp
  * @Date 2020/7/9 9:28
  **/
-public class FindCommonStr {
+public class Case08_CommonStr {
     public static void main(String[] args) {
         String a = "13452439";
         String b = "123456";
@@ -21,6 +21,7 @@ public class FindCommonStr {
 
     }
 
+    // 按照编码来
     private static String getCommonStr3(String a, String b) {
         String maxStr = "";
         int max_len = 0;
@@ -61,6 +62,7 @@ public class FindCommonStr {
         }
         System.out.println(isfind);
     }
+
 
     private static String getCommonStr(String a, String b) {
         char[] c1 = a.toCharArray();

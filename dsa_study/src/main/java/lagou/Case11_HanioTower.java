@@ -1,12 +1,12 @@
-package arith;
+package lagou;
 
 /**
- * @ClassName HanioTower
+ * @ClassName Case11_HanioTower
  * @Description 递归完成汉诺塔
  * @Author liangxp
  * @Date 2020/7/14 10:08
  **/
-public class HanioTower {
+public class Case11_HanioTower {
     public static void main(String[] args) {
         //三根柱子标记为x y z  待移动的盘子数量n
         // 移动步骤
