@@ -30,7 +30,8 @@ public class CountDownLatchTest3 {
             }
         }).start();
 
-        countDownLatch.await(5, TimeUnit.SECONDS);
+//        countDownLatch.await(5, TimeUnit.SECONDS);
+        countDownLatch.await();
         System.out.println(3);
     }
 }

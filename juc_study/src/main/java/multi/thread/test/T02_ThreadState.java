@@ -20,6 +20,7 @@ public class T02_ThreadState {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
+                mm();
                 System.out.println(i);
             }
         }

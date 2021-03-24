@@ -11,8 +11,10 @@ import java.io.IOException;
 public class T01_NormalReference {
     public static void main(String[] args) throws IOException {
         M m = new M();
-        //m = null;
+//        m = null;
         System.gc();
+        System.out.println(m);
         System.in.read();
+        System.out.println(m);
     }
 }
