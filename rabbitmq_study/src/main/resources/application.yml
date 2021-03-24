@@ -1,0 +1,9 @@
+server:
+  port: 80
+
+spring:
+  rabbitmq:
+    host: localhost
+    username: guest
+    password: guest
+    virtual-host: /
