@@ -35,9 +35,7 @@ public class T05_CountDownLatch {
                     e.printStackTrace();
                 }
             }
-
             System.out.println("t2 结束");
-
         }, "t2").start();
 
         try {

@@ -25,7 +25,6 @@ public class T04_NotifyHoldingLock {
         T04_NotifyHoldingLock c = new T04_NotifyHoldingLock();
         final Object lock = new Object();
 
-
         new Thread(() -> {
             synchronized (lock) {
                 System.out.println("t2 启动");
@@ -36,11 +35,9 @@ public class T04_NotifyHoldingLock {
                         e.printStackTrace();
                     }
                 }
-
                 System.out.println("t2 结束");
-
+                lock.notify();
             }
-            lock.notify();
         }, "t2").start();
 
         try {
@@ -69,9 +66,7 @@ public class T04_NotifyHoldingLock {
                         e.printStackTrace();
                     }
                 }
-
             }
-
         },"t1").start();
     }
 
