@@ -477,7 +477,9 @@ public class ThreadPoolExecutor extends AbstractExecutorService {
      */
     // runState存储在高三位中，低29位代表目前线程池有多少线程数量
     private final AtomicInteger ctl = new AtomicInteger(ctlOf(RUNNING, 0));
+    // 29
     private static final int COUNT_BITS = Integer.SIZE - 3;
+    // 2^29 -1
     private static final int CAPACITY   = (1 << COUNT_BITS) - 1;
 
     // runState is stored in the high-order bits
@@ -1029,15 +1031,15 @@ public class ThreadPoolExecutor extends AbstractExecutorService {
 
             // Check if queue empty only if necessary.
             // 等同于(rs > SHUTDOWN || (rs == SHUTDOWN && firstTask != null) || (rs == SHUTDOWN && workQueue.isEmpty()))
-            // 线程池状态大于SHUTDOWN时，直接返回false
-            // 线程池状态等于SHUTDOWN，且firstTask不为null，直接返回false
-            // 线程池状态等于SHUTDOWN，且队列为空，直接返回false
+            // 1.线程池状态大于SHUTDOWN时，直接返回false
+            // 2.线程池状态等于SHUTDOWN，且firstTask不为null，直接返回false
+            // 3.线程池状态等于SHUTDOWN，且队列为空，直接返回false
             if (rs >= SHUTDOWN &&
                 ! (rs == SHUTDOWN &&
                    firstTask == null &&
                    ! workQueue.isEmpty()))
                 return false;
-            // 内层咨询
+            // 内层自旋
             for (;;) {
                 int wc = workerCountOf(c);
                 // wc数量超过容量,直接返回false
@@ -1271,14 +1273,19 @@ public class ThreadPoolExecutor extends AbstractExecutorService {
         Thread wt = Thread.currentThread();
         Runnable task = w.firstTask;
         w.firstTask = null;
+        // 调用unlock是为了让外部可以中断
         w.unlock(); // allow interrupts 允许外部可以中断
         // 用于判断是否进入过自旋
         boolean completedAbruptly = true;
         try {
-            // firstTask不为null执行firstTask
+            // 此处是自旋
+            // 1.如果firstTask不为null,则执行firstTask
+            // 2.如果firstTask为null,则调用getTask()从队列获取任务
+            // 3.阻塞队列特性就是队列为空时,当前线程会被阻塞等待
             // 为null则从队列获取任务执行
             while (task != null || (task = getTask()) != null) {
-                // 加锁降低锁范围，提高性能，保证每个worker执行的任务是串行的
+                // 这里加锁的目的：
+                // 1.降低锁范围，提高性能; 2.保证每个worker执行的任务是串行的
                 w.lock();
                 // If pool is stopping, ensure thread is interrupted;
                 // if not, ensure thread is not interrupted.  This
@@ -1309,6 +1316,7 @@ public class ThreadPoolExecutor extends AbstractExecutorService {
                         afterExecute(task, thrown);
                     }
                 } finally {
+                    // 帮助GC
                     task = null;
                     // 完成任务加1 释放锁
                     w.completedTasks++;
@@ -1473,7 +1481,7 @@ public class ThreadPoolExecutor extends AbstractExecutorService {
         this.corePoolSize = corePoolSize;
         this.maximumPoolSize = maximumPoolSize;
         this.workQueue = workQueue;
-        // 根据单位将存活时间转为纳秒
+        // 根据传入参数unit 和 keepAliveTime 将存活时间转为纳秒
         this.keepAliveTime = unit.toNanos(keepAliveTime);
         this.threadFactory = threadFactory;
         this.handler = handler;
@@ -1543,6 +1551,9 @@ public class ThreadPoolExecutor extends AbstractExecutorService {
             else if (workerCountOf(recheck) == 0)
                 addWorker(null, false);
         }
+        // 如果线程池不是运行状态，或者任务进入队列失败，则尝试创建worker执行任务
+        // 需要注意：线程池不是运行状态时，addWorker内部会判断线程池状态
+        // addWorker第二个参数表示是否创建核心线程 addWorker返回false，说明任务执行失败,需要执行reject操作
         else if (!addWorker(command, false))
             reject(command);
     }
